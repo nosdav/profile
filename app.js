@@ -1,6 +1,6 @@
 import { html, Component } from './js/spux.js'
 import { getPath, getQueryStringValue, loadFile, saveFile } from './util.js'
-import './css/style.css'
+// import './css/style.css'
 import './js/dior.js'
 
 class UserProfile extends Component {
@@ -47,6 +47,7 @@ export class App extends Component {
     super();
     this.fetchProfile = this.fetchProfile.bind(this);
     const serverUrl = getQueryStringValue('storage') || 'https://nosdav.nostr.rocks';
+    const profilePubkey = getQueryStringValue('pubkey')
     const mode = getQueryStringValue('mode') || 'm';
     const uri = getQueryStringValue('uri') || 'bookmarks.json';
     this.state = {
@@ -57,12 +58,16 @@ export class App extends Component {
       newBookmarkUrl: '',
       serverUrl: serverUrl,
       mode: mode,
+      profilePubkey: profilePubkey
     };
   }
 
 
   userLogin = async () => {
     const userPublicKey = await window.nostr.getPublicKey();
+    if (this.state.profilePubkey) {
+      userPublicKey = this.state.profilePubkey
+    }
     console.log(`Logged in with public key: ${userPublicKey}`);
     await this.setState({ userPublicKey: userPublicKey });
     this.fetchProfile(userPublicKey, this.render)
