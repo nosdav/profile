@@ -3,6 +3,31 @@ import { getPath, getQueryStringValue, loadFile, saveFile } from './util.js'
 // import './css/style.css'
 import './js/dior.js'
 
+await awaitForNostr();
+const userPublicKey = await window.nostr.getPublicKey();
+
+
+function awaitForNostr() {
+  return new Promise(resolve => {
+    let intervalTime = 2;
+    const maxIntervalTime = 500;
+    const maxElapsedTime = 5000;
+    let elapsedTime = 0;
+    const intervalId = setInterval(() => {
+      elapsedTime += intervalTime;
+      if (typeof window.nostr !== 'undefined') {
+        clearInterval(intervalId);
+        resolve();
+      } else if (elapsedTime >= maxElapsedTime) {
+        clearInterval(intervalId);
+        resolve();
+      } else {
+        intervalTime = Math.min(intervalTime * 1.5, maxIntervalTime);
+      }
+    }, intervalTime);
+  });
+}
+
 class UserProfile extends Component {
   render() {
     const { userPublicKey, name, picture, about, banner } = this.props;
@@ -46,14 +71,17 @@ export class App extends Component {
   constructor() {
     super();
     this.fetchProfile = this.fetchProfile.bind(this);
-    const serverUrl = getQueryStringValue('storage') || 'https://nosdav.nostr.rocks';
+
+    const serverUrl = getQueryStringValue('storage') || di.data.storage || 'https://nosdav.nostr.rocks'
+    const mode = getQueryStringValue('mode') || di.data.m || 'm'
+    const uri = getQueryStringValue('uri') || di.data.uri || 'profile.json'
+
     const profilePubkey = getQueryStringValue('pubkey')
-    const mode = getQueryStringValue('mode') || 'm';
-    const uri = getQueryStringValue('uri') || 'bookmarks.json';
+
     this.state = {
       userPublicKey: null,
       filename: uri,
-      fileContent: '[]',
+      fileContent: '',
       bookmarks: [],
       newBookmarkUrl: '',
       serverUrl: serverUrl,
@@ -64,7 +92,8 @@ export class App extends Component {
 
 
   userLogin = async () => {
-    const userPublicKey = await window.nostr.getPublicKey();
+    await awaitForNostr();
+    var userPublicKey = await window.nostr.getPublicKey();
     if (this.state.profilePubkey) {
       userPublicKey = this.state.profilePubkey
     }
@@ -134,7 +163,7 @@ export class App extends Component {
   
           <textarea
             id="file-content"
-            placeholder="Login First"
+            placeholder="Empty..."
             name="content"
             rows="10"
             value="${fileContent}"

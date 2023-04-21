@@ -44,6 +44,13 @@ body {
   max-height: 200px;
   width: auto;
 }
+
+.banner img {
+  max-height: 200px; /* or any desired value */
+  width: 100%;
+  object-fit: cover;
+}
+
 .file-section {
   width: 100%;
   margin-top: 1rem;
