@@ -159,23 +159,21 @@ export class App extends Component {
         </div>
 
         <div class="file-section">
-          <label for="content">Notes</label>
+          <label for="content">Config</label>
   
           <textarea
             id="file-content"
             placeholder="Empty..."
             name="content"
             rows="10"
-            value="${fileContent}"
+            value="${JSON.stringify(di.data, null, 2)}"
             onInput="${this.updateFileContent}"
           ></textarea>
           <div>
             ${userPublicKey
         ? html`
                   <button id="save" onClick="${this.save}">Save</button>
-                  <button id="login" onClick="${this.userLogin}">
-                    Load
-                  </button>
+
                 `
         : html` <button id="login" onClick="${this.userLogin}">
                   Login
