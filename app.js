@@ -193,11 +193,18 @@ export class App extends Component {
   fetchProfile(pubkey, render) {
     const NOSTR_RELAY_URL = 'wss://nostr-pub.wellorder.net';
 
+    var key
+    if (di.data.mainEntity && di.data.mainEntity['@id']) {
+      key = di.data.mainEntity['@id'].replace('nostr:pubkey:', '')
+    } else {
+      key = this.state.userPublicKey
+    }
+
     let wss = new WebSocket(NOSTR_RELAY_URL);
     let kind = 0;
     let id = 'profile';
     wss.onopen = function () {
-      const req = `["REQ", "${id}", { "kinds": [${kind}], "authors": ["${pubkey}"] }]`;
+      const req = `["REQ", "${id}", { "kinds": [${kind}], "authors": ["${key}"] }]`;
       wss.send(req);
     };
 
