@@ -90,17 +90,28 @@ export class App extends Component {
     };
   }
 
+  saveTasks = async () => {
+    const { tasks, userPublicKey, serverUrl, mode, filename } = this.state;
+    const fileContent = JSON.stringify(tasks);
+    const success = await saveFile(serverUrl, userPublicKey, filename, mode, fileContent);
+
+    if (!success) {
+      alert('Error saving tasks');
+    }
+  };
+
 
   userLogin = async () => {
     await awaitForNostr();
     var userPublicKey = await window.nostr.getPublicKey();
     if (this.state.profilePubkey) {
-      userPublicKey = this.state.profilePubkey
+      userPublicKey = this.state.profilePubkey;
     }
     console.log(`Logged in with public key: ${userPublicKey}`);
     await this.setState({ userPublicKey: userPublicKey });
-    this.fetchProfile(userPublicKey, this.render)
-  }
+    // Use an arrow function here
+    this.fetchProfile(userPublicKey, () => this.render());
+  };
 
 
   async componentDidMount() {
@@ -110,31 +121,38 @@ export class App extends Component {
 
   // fetchProfile.js
   fetchProfile(pubkey, render) {
-    const NOSTR_RELAY_URL = 'wss://nostr-pub.wellorder.net'
+    const NOSTR_RELAY_URL = 'wss://nostr-pub.wellorder.net';
 
-    let wss = new WebSocket(NOSTR_RELAY_URL)
-    let kind = 0
-    let id = 'profile'
+    let wss = new WebSocket(NOSTR_RELAY_URL);
+    let kind = 0;
+    let id = 'profile';
     wss.onopen = function () {
-      const req = `["REQ", "${id}", { "kinds": [${kind}], "authors": ["${pubkey}"] }]`
-      wss.send(req)
-    }
+      const req = `["REQ", "${id}", { "kinds": [${kind}], "authors": ["${pubkey}"] }]`;
+      wss.send(req);
+    };
 
+    // Use an arrow function here
     wss.onmessage = (msg) => {
-      const data = JSON.parse(msg.data)[2];
-      console.log(data);
-      const content = JSON.parse(data.content);
+      const response = JSON.parse(msg.data);
 
-      this.setState({
-        name: content.name,
-        picture: content.picture,
-        website: content.website,
-        about: content.about,
-        banner: content.banner,
-        github: content.identities?.[0]?.claim,
-      });
+      if (response && response[2]) {
+        const data = response[2];
+        console.log(data);
+        const content = JSON.parse(data.content);
 
-      render();
+        this.setState({
+          name: content.name,
+          picture: content.picture,
+          website: content.website,
+          about: content.about,
+          banner: content.banner,
+          github: content.identities?.[0]?.claim,
+        });
+
+        render();
+      } else {
+        console.error('Invalid or undefined data received:', msg.data);
+      }
     };
   }
 
@@ -172,7 +190,7 @@ export class App extends Component {
           <div>
             ${userPublicKey
         ? html`
-                  <button id="save" onClick="${this.save}">Save</button>
+                  <button id="save" onClick="${this.saveProfile}">Save</button>
 
                 `
         : html` <button id="login" onClick="${this.userLogin}">
