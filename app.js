@@ -163,7 +163,9 @@ export class App extends Component {
     if (this.state.profilePubkey) {
       userPublicKey = this.state.profilePubkey;
     }
-    di.data[0].mainEntity['@id'] = 'nostr:pubkey:' + userPublicKey
+    if (!di.data[0].mainEntity['@id']) {
+      di.data[0].mainEntity['@id'] = 'nostr:pubkey:' + userPublicKey
+    }
     console.log(`Logged in with public key: ${userPublicKey}`);
     await this.setState({ userPublicKey: userPublicKey, apps: findNestedObjectById(di.data, 'nostr:pubkey:' + userPublicKey)?.mainEntity?.app || [] })
     // Use an arrow function here
