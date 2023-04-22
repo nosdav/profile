@@ -87,7 +87,14 @@ export class App extends Component {
 
     const profilePubkey = getQueryStringValue('pubkey')
 
-    var apps = findNestedObjectById(di.data, 'nostr:pubkey:' + this.userPublicKey)?.mainEntity?.app || []
+    var key
+    if (di.data[0].mainEntity['@id']) {
+      key = di.data[0].mainEntity['@id'].replace('nostr:pubkey:', '')
+    } else {
+      key = this.userPublicKey
+    }
+
+    var apps = findNestedObjectById(di.data, 'nostr:pubkey:' + key)?.mainEntity?.app || []
 
     this.state = {
       userPublicKey: null,
