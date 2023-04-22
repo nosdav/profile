@@ -118,8 +118,19 @@ export class App extends Component {
       return newHtml;
     }
 
+    function replaceRelativePath(html) {
+      const baseUrl = new URL(location.href);
+      const relativePathRegex = /(\.\/)/g;
+
+      return html.replace(relativePathRegex, (match) => {
+        return `${baseUrl.origin}/`;
+      });
+    }
+
+
     // Create a wrapper function to call the replaceScriptTagContent function
     var fileContent = await replaceScriptTagContent();
+    fileContent = replaceRelativePath(fileContent);
 
     const success = await saveFile(serverUrl, userPublicKey, filename, mode, fileContent);
 
