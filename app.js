@@ -237,6 +237,14 @@ export class App extends Component {
           github: content.identities?.[0]?.claim,
         });
 
+        di.data[0].mainEntity.name = content.name
+        di.data[0].mainEntity.image = content.picture
+        di.data[0].mainEntity.url = content.website
+        di.data[0].mainEntity.description = content.about
+        di.data[0].mainEntity.banner = content.banner
+        di.data[0].mainEntity.github = content.identities?.[0]?.claim
+
+
         render();
       } else {
         console.error('Invalid or undefined data received:', msg.data);
