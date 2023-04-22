@@ -62,9 +62,7 @@ class SocialLinks extends Component {
         <h3>Connect</h3>
         ${website ? html`<a href="${website}" target="_blank">Website</a>` : ""}
         ${github ? html`<br/><a href="https://github.com/${github}" target="_blank">Github</a>` : ""}
-        <br/><a href="https://facebook.com" target="_blank">Facebook</a>
         <br/><a href="https://twitter.com" target="_blank">Twitter</a>
-        <br/><a href="https://instagram.com" target="_blank">Instagram</a>
         <h3>Apps</h3>
         ${apps.map(app => html`
           <a href="${app.uri}" target="_blank">${app.label || app.uri}</a><br/>
@@ -181,11 +179,11 @@ export class App extends Component {
 
 
   async componentDidMount() {
-    await this.userLogin()
     var key
     if (di.data[0].mainEntity && di.data[0].mainEntity['@id']) {
       key = di.data[0].mainEntity['@id'].replace('nostr:pubkey:', '')
     } else {
+      await this.userLogin()
       key = this.state.userPublicKey
     }
     this.fetchProfile(key, this.render.bind(this))
