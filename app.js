@@ -48,9 +48,25 @@ class UserProfile extends Component {
   }
 }
 
+class AppLinks extends Component {
+  render() {
+    const { apps } = this.props;
+
+    return html`
+      <div class="app-links">
+        <h3>Apps</h3>
+        ${apps.map(app => html`
+          <a href="${app}" target="_blank">${app}</a><br/>
+        `)}
+      </div>
+    `;
+  }
+}
+
+
 class SocialLinks extends Component {
   render() {
-    const { website, github } = this.props;
+    const { website, github, apps } = this.props;
 
     return html`
       <div class="social-links">
@@ -60,7 +76,12 @@ class SocialLinks extends Component {
         <br/><a href="https://facebook.com" target="_blank">Facebook</a>
         <br/><a href="https://twitter.com" target="_blank">Twitter</a>
         <br/><a href="https://instagram.com" target="_blank">Instagram</a>
+        <h3>Apps</h3>
+        ${apps.map(app => html`
+          <a href="${app}" target="_blank">${app}</a><br/>
+        `)}
         <h3>Contacts</h3>
+
       </div>
     `
   }
@@ -86,7 +107,8 @@ export class App extends Component {
       newBookmarkUrl: '',
       serverUrl: serverUrl,
       mode: mode,
-      profilePubkey: profilePubkey
+      profilePubkey: profilePubkey,
+      apps: di.data?.mainEntity?.app || []
     };
   }
 
@@ -200,7 +222,7 @@ export class App extends Component {
   }
 
   render() {
-    const { userPublicKey, fileContent, name, picture, website, about, banner, github } = this.state;
+    const { userPublicKey, fileContent, name, picture, website, about, banner, github, apps } = this.state;
 
     return html`
       <div id="container">
@@ -216,6 +238,7 @@ export class App extends Component {
           <${SocialLinks}
             website="${website}"
             github="${github}"
+            apps="${apps}"
           />
         </div>
 
