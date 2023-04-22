@@ -76,6 +76,8 @@ class SocialLinks extends Component {
 }
 
 
+
+// APP
 export class App extends Component {
   constructor() {
     super();
@@ -108,10 +110,6 @@ export class App extends Component {
       apps: apps
     };
   }
-
-  updateFileContent = (e) => {
-    this.setState({ fileContent: e.target.value });
-  };
 
 
   saveProfile = async () => {
