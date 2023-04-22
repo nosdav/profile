@@ -96,8 +96,33 @@ export class App extends Component {
 
 
   saveProfile = async () => {
-    const { fileContent, userPublicKey, serverUrl, mode, filename } = this.state;
+    const { userPublicKey, serverUrl, mode, filename } = this.state;
+
+    di.data.mainEntity['@id'] = 'nostr:pubkey:' + userPublicKey;
+
+    async function replaceScriptTagContent() {
+      const improvedRegex = /(<script[^>]*type\s*=\s*(['"])application[^>]*\2[^>]*>)([\s\S]*?)(<\/script>)/gim;
+
+      // Fetch the current HTML page content
+      const response = await fetch(location.href);
+      const html = await response.text();
+
+      // Replace the script tag content with a pretty-printed, stringified version of di.data
+      const newHtml = html.replace(improvedRegex, (match, openingTag, quote, content, closingTag) => {
+        return `${openingTag}${JSON.stringify(di.data, null, 2)}${closingTag}`;
+      });
+
+      // Log the new output to the console
+      console.log(newHtml);
+
+      return newHtml;
+    }
+
+    // Create a wrapper function to call the replaceScriptTagContent function
+    var fileContent = await replaceScriptTagContent();
+
     const success = await saveFile(serverUrl, userPublicKey, filename, mode, fileContent);
+
 
     if (!success) {
       alert('Error saving profile');
