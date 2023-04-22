@@ -35,17 +35,18 @@ function awaitForNostr() {
 class UserProfile extends Component {
   render() {
     const { userPublicKey, name, picture, about, banner } = this.props;
+    const shortenedPubKey = userPublicKey ? userPublicKey.slice(0, 16) : '';
+    const irisLink = `https://iris.to/${userPublicKey}`;
 
     return html`
       <div class="user-profile">
-      ${banner ? html`<div class="banner"><img src="${banner}" alt="Banner" /></div>` : ''}
-      <br/>
+        ${banner ? html`<div class="banner"><img src="${banner}" alt="Banner" /></div>` : ''}
+        <br/>
 
-      
-      <h2>${name}</h2>
+        <h2>${name}</h2>
 
         <img src="${picture}" alt="Profile Picture" class="user-picture" />
-        <p>Pubkey: ${userPublicKey}</p>
+        ${userPublicKey ? html`<p>Pubkey: <a href="${irisLink}" target="_blank">${shortenedPubKey}</a></p>` : ''}
         ${about ? html`<p>${about}</p>` : ''}
       </div>
     `;
