@@ -220,16 +220,6 @@ export class App extends Component {
         </div>
 
         <div class="file-section">
-          <label for="content">Notes</label>
-  
-          <textarea
-            id="file-content"
-            placeholder="Empty..."
-            name="content"
-            rows="10"
-            value="${this.fileContent}"
-            onInput="${this.updateFileContent}"
-          ></textarea>
           <div>
             ${userPublicKey
         ? html`
