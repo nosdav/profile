@@ -67,7 +67,7 @@ class SocialLinks extends Component {
         <br/><a href="https://instagram.com" target="_blank">Instagram</a>
         <h3>Apps</h3>
         ${apps.map(app => html`
-          <a href="${app}" target="_blank">${app}</a><br/>
+          <a href="${app.uri}" target="_blank">${app.label || app.uri}</a><br/>
         `)}
         <h3>Contacts</h3>
 
@@ -82,9 +82,9 @@ export class App extends Component {
     super();
     this.fetchProfile = this.fetchProfile.bind(this);
 
-    const serverUrl = getQueryStringValue('storage') || di.data.storage || 'https://nosdav.nostr.rocks'
-    const mode = getQueryStringValue('mode') || di.data.m || 'm'
-    const uri = getQueryStringValue('uri') || di.data.uri || 'profile.json'
+    const serverUrl = getQueryStringValue('storage') || di.data[0].storage || 'https://nosdav.nostr.rocks'
+    const mode = getQueryStringValue('mode') || di.data[0].m || 'm'
+    const uri = getQueryStringValue('uri') || di.data[0].uri || 'profile.json'
 
     const profilePubkey = getQueryStringValue('pubkey')
 
@@ -111,7 +111,7 @@ export class App extends Component {
   saveProfile = async () => {
     const { userPublicKey, serverUrl, mode, filename } = this.state;
 
-    di.data.mainEntity['@id'] = 'nostr:pubkey:' + userPublicKey;
+    di.data[0].mainEntity['@id'] = 'nostr:pubkey:' + userPublicKey;
 
     async function replaceScriptTagContent() {
       const improvedRegex = /(<script[^>]*type\s*=\s*(['"])application[^>]*\2[^>]*>)([\s\S]*?)(<\/script>)/gim;
@@ -163,7 +163,7 @@ export class App extends Component {
     if (this.state.profilePubkey) {
       userPublicKey = this.state.profilePubkey;
     }
-    di.data.mainEntity['@id'] = 'nostr:pubkey:' + userPublicKey
+    di.data[0].mainEntity['@id'] = 'nostr:pubkey:' + userPublicKey
     console.log(`Logged in with public key: ${userPublicKey}`);
     await this.setState({ userPublicKey: userPublicKey, apps: findNestedObjectById(di.data, 'nostr:pubkey:' + userPublicKey)?.mainEntity?.app || [] })
     // Use an arrow function here
@@ -218,6 +218,14 @@ export class App extends Component {
 
     var apps = findNestedObjectById(di.data, 'nostr:pubkey:' + this.state.userPublicKey)?.app || []
 
+    const uriWithLabels = apps.map((uri) => {
+      const foundObject = findNestedObjectById(di.data, uri);
+      const label = foundObject ? foundObject.label : null;
+      return { uri, label };
+    });
+
+    console.log(uriWithLabels);
+
     return html`
       <div id="container">
 
@@ -232,7 +240,7 @@ export class App extends Component {
           <${SocialLinks}
             website="${website}"
             github="${github}"
-            apps="${apps}"
+            apps="${uriWithLabels}"
           />
         </div>
 

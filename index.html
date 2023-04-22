@@ -6,23 +6,40 @@
     <link rel="stylesheet" href="./css/style.css" />
     <title>NosDAV Profile</title>
     <script type="application/ld+json" id="data">
-      {
-        "@id": "#app",
-        "storage": "https://nosdav.nostr.rocks",
-        "uri": "index.html",
-        "mode": "m",
-        "mainEntity": {
-          "@id": "nostr:pubkey:ANB2R5G7Z3Y4Q3Z7",
-          "@type": "NostrPubkey",
-          "name": "Melvin Carvalho",
-          "image": "https://void.cat/d/KhHoehWtdyXFjmDh1NxKWZ",
-          "app": [
-            "https://nosdav.com/todo/",
-            "https://nosdav.com/pastebin/",
-            "https://nosdav.com/bookmarks/"
-          ]
+      [
+        {
+          "@id": "",
+          "storage": "https://nosdav.nostr.rocks",
+          "uri": "index.html",
+          "mode": "m",
+          "mainEntity": {
+            "@id": "nostr:pubkey:ANB2R5G7Z3Y4Q3Z7",
+            "@type": "NostrPubkey",
+            "name": "Melvin Carvalho",
+            "image": "https://void.cat/d/KhHoehWtdyXFjmDh1NxKWZ",
+            "app": [
+              "https://nosdav.com/todo/",
+              "https://nosdav.com/pastebin/",
+              "https://nosdav.com/bookmarks/"
+            ]
+          }
+        },
+        {
+          "@id": "https://nosdav.com/todo/",
+          "@type": "WebApplication",
+          "label": "NosDAV Todo"
+        },
+        {
+          "@id": "https://nosdav.com/pastebin/",
+          "@type": "WebApplication",
+          "label": "NosDAV Pastebin"
+        },
+        {
+          "@id": "https://nosdav.com/bookmarks/",
+          "@type": "WebApplication",
+          "label": "NosDAV Bookmarks"
         }
-      }
+      ]
     </script>
     <script type="module" src="./app.js"></script>
   </head>
