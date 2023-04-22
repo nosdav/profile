@@ -55,14 +55,15 @@ class UserProfile extends Component {
 
 class SocialLinks extends Component {
   render() {
-    const { website, github, apps } = this.props;
+    const { website, github, apps, twitter } = this.props;
 
     return html`
       <div class="social-links">
         <h3>Connect</h3>
         ${website ? html`<a href="${website}" target="_blank">Website</a>` : ""}
         ${github ? html`<br/><a href="https://github.com/${github}" target="_blank">Github</a>` : ""}
-        <br/><a href="https://twitter.com" target="_blank">Twitter</a>
+        ${twitter ? html`<br/><a href="https://twitter.com/${twitter}" target="_blank">Twitter</a>` : ""}
+
         <h3>Apps</h3>
         ${apps.map(app => html`
           <a href="${app.uri}" target="_blank">${app.label || app.uri}</a><br/>
