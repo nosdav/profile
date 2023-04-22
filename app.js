@@ -1,10 +1,12 @@
 import { html, Component, render } from './js/spux.js'
 import { getPath, getQueryStringValue, loadFile, saveFile } from './util.js'
+import { findNestedObjectById } from './js/linkedobjects.js'
+
 // import './css/style.css'
 import './js/dior.js'
 
-await awaitForNostr();
-const userPublicKey = await window.nostr.getPublicKey();
+// await awaitForNostr();
+// const userPublicKey = await window.nostr.getPublicKey();
 
 
 function awaitForNostr() {
@@ -14,8 +16,10 @@ function awaitForNostr() {
     const maxElapsedTime = 5000;
     let elapsedTime = 0;
     const intervalId = setInterval(() => {
+      console.log(intervalTime, elapsedTime)
       elapsedTime += intervalTime;
       if (typeof window.nostr !== 'undefined') {
+        console.log('nostr found')
         clearInterval(intervalId);
         resolve();
       } else if (elapsedTime >= maxElapsedTime) {
@@ -43,21 +47,6 @@ class UserProfile extends Component {
         <img src="${picture}" alt="Profile Picture" class="user-picture" />
         <p>Pubkey: ${userPublicKey}</p>
         ${about ? html`<p>${about}</p>` : ''}
-      </div>
-    `;
-  }
-}
-
-class AppLinks extends Component {
-  render() {
-    const { apps } = this.props;
-
-    return html`
-      <div class="app-links">
-        <h3>Apps</h3>
-        ${apps.map(app => html`
-          <a href="${app}" target="_blank">${app}</a><br/>
-        `)}
       </div>
     `;
   }
@@ -99,6 +88,8 @@ export class App extends Component {
 
     const profilePubkey = getQueryStringValue('pubkey')
 
+    var apps = findNestedObjectById(di.data, 'nostr:pubkey:' + this.userPublicKey)?.mainEntity?.app || []
+
     this.state = {
       userPublicKey: null,
       filename: uri,
@@ -108,7 +99,7 @@ export class App extends Component {
       serverUrl: serverUrl,
       mode: mode,
       profilePubkey: profilePubkey,
-      apps: di.data?.mainEntity?.app || []
+      apps: apps
     };
   }
 
@@ -172,8 +163,9 @@ export class App extends Component {
     if (this.state.profilePubkey) {
       userPublicKey = this.state.profilePubkey;
     }
+    di.data.mainEntity['@id'] = 'nostr:pubkey:' + userPublicKey
     console.log(`Logged in with public key: ${userPublicKey}`);
-    await this.setState({ userPublicKey: userPublicKey });
+    await this.setState({ userPublicKey: userPublicKey, apps: findNestedObjectById(di.data, 'nostr:pubkey:' + userPublicKey)?.mainEntity?.app || [] })
     // Use an arrow function here
     this.fetchProfile(userPublicKey, () => this.render());
   };
@@ -222,7 +214,9 @@ export class App extends Component {
   }
 
   render() {
-    const { userPublicKey, fileContent, name, picture, website, about, banner, github, apps } = this.state;
+    const { userPublicKey, fileContent, name, picture, website, about, banner, github } = this.state;
+
+    var apps = findNestedObjectById(di.data, 'nostr:pubkey:' + this.state.userPublicKey)?.app || []
 
     return html`
       <div id="container">
