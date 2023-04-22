@@ -181,7 +181,7 @@ export class App extends Component {
         </div>
 
         <div class="file-section">
-          <label for="content">Config</label>
+          <label for="content">Notes</label>
   
           <textarea
             id="file-content"
@@ -194,7 +194,7 @@ export class App extends Component {
           <div>
             ${userPublicKey
         ? html`
-                  <button id="save" onClick="${this.saveProfile}">Save</button>
+                  <button id="save" onClick="${this.saveProfile}">Save Profile</button>
 
                 `
         : html` <button id="login" onClick="${this.userLogin}">
