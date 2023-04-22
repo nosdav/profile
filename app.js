@@ -245,8 +245,14 @@ export class App extends Component {
 
   render() {
     const { userPublicKey, fileContent, name, picture, website, about, banner, github } = this.state;
+    var key
+    if (di.data[0].mainEntity && di.data[0].mainEntity['@id']) {
+      key = di.data[0].mainEntity['@id'].replace('nostr:pubkey:', '')
+    } else {
+      key = this.state.userPublicKey
+    }
 
-    var apps = findNestedObjectById(di.data, 'nostr:pubkey:' + this.state.userPublicKey)?.app || []
+    var apps = findNestedObjectById(di.data, 'nostr:pubkey:' + key)?.app || []
 
     const uriWithLabels = apps.map((uri) => {
       const foundObject = findNestedObjectById(di.data, uri);
