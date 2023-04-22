@@ -173,7 +173,13 @@ export class App extends Component {
 
   async componentDidMount() {
     await this.userLogin()
-    this.fetchProfile(this.state.userPublicKey, this.render.bind(this))
+    var key
+    if (di.data.mainEntity && di.data.mainEntity['@id']) {
+      key = di.data.mainEntity['@id'].replace('nostr:pubkey:', '')
+    } else {
+      key = this.state.userPublicKey
+    }
+    this.fetchProfile(key, this.render.bind(this))
   }
 
   // fetchProfile.js
