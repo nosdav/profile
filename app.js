@@ -168,8 +168,8 @@ export class App extends Component {
     await this.setState({ userPublicKey: userPublicKey, apps: findNestedObjectById(di.data, 'nostr:pubkey:' + userPublicKey)?.mainEntity?.app || [] })
     // Use an arrow function here
     var key
-    if (di.data.mainEntity && di.data.mainEntity['@id']) {
-      key = di.data.mainEntity['@id'].replace('nostr:pubkey:', '')
+    if (di.data[0].mainEntity && di.data[0].mainEntity['@id']) {
+      key = di.data[0].mainEntity['@id'].replace('nostr:pubkey:', '')
     } else {
       key = this.state.userPublicKey
     }
@@ -181,8 +181,8 @@ export class App extends Component {
   async componentDidMount() {
     await this.userLogin()
     var key
-    if (di.data.mainEntity && di.data.mainEntity['@id']) {
-      key = di.data.mainEntity['@id'].replace('nostr:pubkey:', '')
+    if (di.data[0].mainEntity && di.data[0].mainEntity['@id']) {
+      key = di.data[0].mainEntity['@id'].replace('nostr:pubkey:', '')
     } else {
       key = this.state.userPublicKey
     }
@@ -194,8 +194,8 @@ export class App extends Component {
     const NOSTR_RELAY_URL = 'wss://nostr-pub.wellorder.net';
 
     var key
-    if (di.data.mainEntity && di.data.mainEntity['@id']) {
-      key = di.data.mainEntity['@id'].replace('nostr:pubkey:', '')
+    if (di.data[0].mainEntity && di.data[0].mainEntity['@id']) {
+      key = di.data[0].mainEntity['@id'].replace('nostr:pubkey:', '')
     } else {
       key = this.state.userPublicKey
     }
