@@ -125,7 +125,7 @@ export class App extends Component {
       const relativePathRegex = /(\.\/)/g;
 
       return html.replace(relativePathRegex, (match) => {
-        return `${baseUrl.href}`;
+        return `${baseUrl.origin}${baseUrl.pathname}`;
       });
     }
 
