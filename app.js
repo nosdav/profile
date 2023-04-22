@@ -267,7 +267,7 @@ export class App extends Component {
 
         <div class="content">
           <${UserProfile}
-            userPublicKey="${userPublicKey}"
+            userPublicKey="${key}"
             name="${name}"
             picture="${picture}"
             about="${about}"
