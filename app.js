@@ -121,12 +121,14 @@ export class App extends Component {
 
     function replaceRelativePath(html) {
       const baseUrl = new URL(location.href);
+      baseUrl.pathname = baseUrl.pathname.substring(0, baseUrl.pathname.lastIndexOf('/') + 1);
       const relativePathRegex = /(\.\/)/g;
 
       return html.replace(relativePathRegex, (match) => {
-        return `${baseUrl.origin}/`;
+        return `${baseUrl.href}`;
       });
     }
+
 
 
     // Create a wrapper function to call the replaceScriptTagContent function
