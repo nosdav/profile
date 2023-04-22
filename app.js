@@ -108,10 +108,11 @@ export class App extends Component {
       const html = await response.text();
 
       // Replace the script tag content with a pretty-printed, stringified version of di.data
-      const newHtml = html.replace(improvedRegex, (match, openingTag, quote, content, closingTag) => {
+      const replacedScriptTagContent = html.replace(improvedRegex, (match, openingTag, quote, content, closingTag) => {
         return `${openingTag}${JSON.stringify(di.data, null, 2)}${closingTag}`;
       });
 
+      const newHtml = replaceRelativePath(replacedScriptTagContent);
       // Log the new output to the console
       console.log(newHtml);
 
@@ -130,7 +131,7 @@ export class App extends Component {
 
     // Create a wrapper function to call the replaceScriptTagContent function
     var fileContent = await replaceScriptTagContent();
-    fileContent = replaceRelativePath(fileContent);
+    // fileContent = replaceRelativePath(fileContent);
 
     const success = await saveFile(serverUrl, userPublicKey, filename, mode, fileContent);
 
