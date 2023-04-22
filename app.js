@@ -90,13 +90,17 @@ export class App extends Component {
     };
   }
 
-  saveTasks = async () => {
-    const { tasks, userPublicKey, serverUrl, mode, filename } = this.state;
-    const fileContent = JSON.stringify(tasks);
+  updateFileContent = (e) => {
+    this.setState({ fileContent: e.target.value });
+  };
+
+
+  saveProfile = async () => {
+    const { fileContent, userPublicKey, serverUrl, mode, filename } = this.state;
     const success = await saveFile(serverUrl, userPublicKey, filename, mode, fileContent);
 
     if (!success) {
-      alert('Error saving tasks');
+      alert('Error saving profile');
     }
   };
 
@@ -184,7 +188,7 @@ export class App extends Component {
             placeholder="Empty..."
             name="content"
             rows="10"
-            value="${JSON.stringify(di.data, null, 2)}"
+            value="${this.fileContent}"
             onInput="${this.updateFileContent}"
           ></textarea>
           <div>
