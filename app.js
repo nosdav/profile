@@ -188,6 +188,10 @@ export class App extends Component {
     this.fetchProfile(key, () => this.render());
   };
 
+  getRelay() {
+    const relay = getQueryStringValue('relay') || di.data[0].relay || 'wss://nostr-pub.wellorder.net';
+    return relay
+  }
 
   async componentDidMount() {
     var key
@@ -202,7 +206,7 @@ export class App extends Component {
 
   // fetchProfile.js
   fetchProfile(pubkey, render) {
-    const NOSTR_RELAY_URL = 'wss://nostr-pub.wellorder.net';
+    const NOSTR_RELAY_URL = this.getRelay()
 
     var key
     if (di.data[0].mainEntity && di.data[0].mainEntity['@id']) {
