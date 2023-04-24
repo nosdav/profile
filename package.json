@@ -1,6 +1,6 @@
 {
   "name": "nosdav-profile",
-  "version": "0.0.42",
+  "version": "0.0.43",
   "description": "profile",
   "main": "index.js",
   "scripts": {
