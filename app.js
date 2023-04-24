@@ -65,7 +65,7 @@ class SocialLinks extends Component {
         ${github ? html`<br/><a href="https://github.com/${github}" target="_blank">Github</a>` : ""}
         ${twitter ? html`<br/><a href="https://twitter.com/${twitter}" target="_blank">Twitter</a>` : ""}
 
-        <h3>Apps</h3>
+        <h3>Apps <a target="_blank" href="../applist/?uri=${location.href}${location.pathname.substring(2)}">↗</a></h3>
         ${apps.map(app => html`
           <a href="${app.uri}" target="_blank">${app.label || app.uri}</a><br/>
         `)}
